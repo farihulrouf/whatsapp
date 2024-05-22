@@ -15,9 +15,9 @@ import (
 var client *whatsmeow.Client
 
 func eventHandler(evt interface{}) {
-	// Check the type of the event and handle it accordingly
+
 	switch evt.(type) {
-	// Add cases for other event types as needed
+
 	default:
 		fmt.Println("Unhandled event:", evt)
 	}
