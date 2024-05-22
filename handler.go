@@ -3,9 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 
-	"github.com/mdp/qrterminal/v3"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types/events"
 )
@@ -13,7 +11,7 @@ import (
 // ScanQrCode memindai dan mencetak kode QR untuk login.
 func ScanQrCode(client *whatsmeow.Client) {
 	if client.Store.ID == nil {
-		//Tidak ada ID yang disimpan, login baru
+		// No ID stored, new login
 		qrChan, _ := client.GetQRChannel(context.Background())
 		err := client.Connect()
 		if err != nil {
@@ -21,8 +19,10 @@ func ScanQrCode(client *whatsmeow.Client) {
 		}
 		for evt := range qrChan {
 			if evt.Event == "code" {
-				// Render kode QR di sini
-				qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
+				// Print each line of the QR code
+				for _, line := range evt.Code {
+					fmt.Println("print line Qr", line)
+				}
 			} else {
 				fmt.Println("Login event:", evt.Event)
 			}
