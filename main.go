@@ -42,14 +42,30 @@ func ScanQrCode() {
 	}
 }
 
+func ReceiveAllMessages(v *events.Message) {
+	if !v.Info.IsFromMe {
+		sender := v.Info.Sender.String()
+		switch {
+		case v.Message.GetConversation() != "":
+			fmt.Printf("Text message from %s: %s\n", sender, v.Message.GetConversation())
+		case v.Message.GetImageMessage() != nil:
+			fmt.Printf("Image message from %s: %s\n", sender, v.Message.GetImageMessage().GetCaption())
+		case v.Message.GetVideoMessage() != nil:
+			fmt.Printf("Video message from %s: %s\n", sender, v.Message.GetVideoMessage().GetCaption())
+		case v.Message.GetAudioMessage() != nil:
+			fmt.Printf("Audio message from %s\n", sender)
+		case v.Message.GetDocumentMessage() != nil:
+			fmt.Printf("Document message from %s: %s\n", sender, v.Message.GetDocumentMessage().GetTitle())
+		default:
+			fmt.Printf("Other type of message from %s\n", sender)
+		}
+	}
+}
+
 func eventHandler(evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Message:
-		if !v.Info.IsFromMe {
-			if v.Message.GetConversation() != "" {
-				fmt.Println("PESAN DITERIMA!", v.Message.GetConversation())
-			}
-		}
+		ReceiveAllMessages(v)
 	}
 }
 
