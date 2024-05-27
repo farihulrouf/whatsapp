@@ -2,16 +2,19 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"net/http"
+	"os"
 
+	"github.com/mdp/qrterminal/v3"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-// ScanQrCode memindai dan mencetak kode QR untuk login.
+// ScanQrCode scans and prints the QR code for login.
 func ScanQrCode(client *whatsmeow.Client) {
 	if client.Store.ID == nil {
-		// No ID stored, new login
 		qrChan, _ := client.GetQRChannel(context.Background())
 		err := client.Connect()
 		if err != nil {
@@ -19,10 +22,7 @@ func ScanQrCode(client *whatsmeow.Client) {
 		}
 		for evt := range qrChan {
 			if evt.Event == "code" {
-				// Print each line of the QR code
-				for _, line := range evt.Code {
-					fmt.Println("print line Qr", line)
-				}
+				qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
 			} else {
 				fmt.Println("Login event:", evt.Event)
 			}
@@ -36,34 +36,55 @@ func ScanQrCode(client *whatsmeow.Client) {
 	}
 }
 
-// terinma semua pasan memproses pesan masuk dan mencetak isinya.
-func ReceiveAllMessages(v *events.Message) {
-	if !v.Info.IsFromMe {
-		sender := v.Info.Sender.String()
-		switch {
-		case v.Message.GetConversation() != "":
-			fmt.Printf("Text message from %s: %s\n", sender, v.Message.GetConversation())
-		case v.Message.GetImageMessage() != nil:
-			fmt.Printf("Image message from %s: %s\n", sender, v.Message.GetImageMessage().GetCaption())
-		case v.Message.GetVideoMessage() != nil:
-			fmt.Printf("Video message from %s: %s\n", sender, v.Message.GetVideoMessage().GetCaption())
-		case v.Message.GetAudioMessage() != nil:
-			fmt.Printf("Audio message from %s\n", sender)
-		case v.Message.GetDocumentMessage() != nil:
-			fmt.Printf("Document message from %s: %s\n", sender, v.Message.GetDocumentMessage().GetTitle())
-		default:
-			fmt.Printf("Other type of message from %s\n", sender)
+// scanQrCodeHandler handles the QR code scanning process
+func scanQrCodeHandler(w http.ResponseWriter, r *http.Request) {
+	if client.Store.ID == nil {
+		qrChan, _ := client.GetQRChannel(context.Background())
+		err := client.Connect()
+		if err != nil {
+			http.Error(w, "Failed to connect client", http.StatusInternalServerError)
+			return
 		}
+		for evt := range qrChan {
+			if evt.Event == "code" {
+				qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
+				qrResp := qrResponse{Code: evt.Code}
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(qrResp)
+				return
+			} else {
+				fmt.Println("Login event:", evt.Event)
+			}
+		}
+	} else {
+		fmt.Println("Already logged in.")
+		err := client.Connect()
+		if err != nil {
+			http.Error(w, "Failed to connect client", http.StatusInternalServerError)
+			return
+		}
+		w.Write([]byte("Already logged in"))
 	}
 }
 
-func ManageGroups() {
-	// Terapkan logika manajemen grup di sini
-	fmt.Println("Manajemen login di sini")
+type qrResponse struct {
+	Code string `json:"code"`
 }
 
-// // HandleGroupChangeEvent menangani event yang berhubungan dengan perubahan grup.
-func HandleGroupChangeEvent(evt interface{}) {
-	// // Untuk saat ini, cetak saja event tersebut untuk menunjukkan bahwa event tersebut tidak tertangani
-	fmt.Println("Unhandled event:", evt)
+// getMessagesHandler returns all stored messages
+func getMessagesHandler(w http.ResponseWriter, r *http.Request) {
+	messages := messageStorage.GetMessages()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(messages)
+}
+
+// ReceiveAllMessages processes incoming messages and stores them
+func ReceiveAllMessages(v *events.Message) {
+	if !v.Info.IsFromMe {
+		msg := Message{
+			Sender:  v.Info.Sender.String(),
+			Content: v.Message.GetConversation(),
+		}
+		messageStorage.AddMessage(msg)
+	}
 }

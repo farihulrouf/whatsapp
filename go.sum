@@ -4,6 +4,8 @@ github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSV
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
+github.com/gorilla/mux v1.8.1/go.mod h1:AKf9I4AEqPTmMytcMc0KkNouC66V3BtZ4qD5fmWSiMQ=
 github.com/gorilla/websocket v1.5.1 h1:gmztn0JnHVt9JZquRuzLw3g4wouNVzKL15iLr/zn/QY=
 github.com/gorilla/websocket v1.5.1/go.mod h1:x3kM2JMyaluk02fnUJpQuwD2dCS5NDG2ZHL0uE0tcaY=
 github.com/mattn/go-colorable v0.1.13 h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=
@@ -26,6 +28,8 @@ go.mau.fi/util v0.4.2 h1:RR3TOcRHmCF9Bx/3YG4S65MYfa+nV6/rn8qBWW4Mi30=
 go.mau.fi/util v0.4.2/go.mod h1:PlAVfUUcPyHPrwnvjkJM9UFcPE7qGPDJqk+Oufa1Gtw=
 go.mau.fi/whatsmeow v0.0.0-20240520180327-81f8f07f1dfb h1:FW5W0ewNOmunylB3Pmru8PvxYkhI6ZphCJtimM2aB6o=
 go.mau.fi/whatsmeow v0.0.0-20240520180327-81f8f07f1dfb/go.mod h1:0+65CYaE6r4dWzr0dN8i+UZKy0gIfJ79VuSqIl0nKRM=
+go.mau.fi/whatsmeow v0.0.0-20240523075404-7f13c31d2cb1 h1:mUEEmZs1xk5QHKXjDxiAP4bYgyj8r7PaZCafHN+KMQg=
+go.mau.fi/whatsmeow v0.0.0-20240523075404-7f13c31d2cb1/go.mod h1:0+65CYaE6r4dWzr0dN8i+UZKy0gIfJ79VuSqIl0nKRM=
 golang.org/x/crypto v0.23.0 h1:dIJU/v2J8Mdglj/8rJ6UUOM3Zc9zLZxVZwwxMooUSAI=
 golang.org/x/crypto v0.23.0/go.mod h1:CKFgDieR+mRhux2Lsu27y0fO304Db0wZe70UKqHu0v8=
 golang.org/x/net v0.25.0 h1:d/OCCoBEUq33pjydKrGQhw7IlUPI2Oylr+8qLx49kac=
