@@ -4,16 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/mdp/qrterminal/v3"
-	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	waLog "go.mau.fi/whatsmeow/util/log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/gorilla/mux"
+	"github.com/mdp/qrterminal/v3"
+	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/store/sqlstore"
+	waLog "go.mau.fi/whatsmeow/util/log"
 )
 
 var (
@@ -41,6 +41,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/scan", scanQrCodeHandler).Methods("GET")
 	r.HandleFunc("/messages", getMessagesHandler).Methods("GET")
+	r.HandleFunc("/messages/{id}", getMessageContentHandler).Methods("GET")
 
 	go func() {
 		fmt.Println("Starting server on port 8080")
@@ -82,6 +83,16 @@ func getMessagesHandler(w http.ResponseWriter, r *http.Request) {
 	// For demonstration purposes, let's just return a dummy response
 	dummyMessages := []string{"Message 1", "Message 2", "Message 3"}
 	json.NewEncoder(w).Encode(dummyMessages)
+}
+
+func getMessageContentHandler(w http.ResponseWriter, r *http.Request) {
+	// Read message with provided ID and return its content
+	// You would implement this function to fetch the message content based on the ID
+	// For demonstration purposes, let's just return a dummy response
+	vars := mux.Vars(r)
+	messageID := vars["id"]
+	messageContent := fmt.Sprintf("Content of message with ID %s", messageID)
+	json.NewEncoder(w).Encode(messageContent)
 }
 
 func eventHandler(evt interface{}) {
